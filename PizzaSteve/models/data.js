@@ -1,44 +1,47 @@
-const pizzaData = {
-  pizzas: [
+const mockOrders = [
     {
-      name: 'Pepperoni Clásico',
-      description: 'Salsa de tomate, mozzarella y pepperoni de primera calidad.',
-      img: 'https://via.placeholder.com/300x200.png?text=Pizza+Pepperoni'
+        id: 'ORD-001',
+        customerName: 'Juan Perez',
+        address: 'Av. Arce, La Paz',
+        status: 'pending',
+        paymentType: 'efectivo',
+        price: 85.50,
+        coordinates: { lat: -16.505, lng: -68.130 }
     },
     {
-      name: 'Margarita',
-      description: 'Salsa de tomate, mozzarella fresca, albahaca y un toque de aceite de oliva.',
-      img: 'https://via.placeholder.com/300x200.png?text=Pizza+Margarita'
+        id: 'ORD-002',
+        customerName: 'Maria Garcia',
+        address: 'Calle 21 de Calacoto, La Paz',
+        status: 'pending',
+        paymentType: 'qr',
+        price: 120.00,
+        coordinates: { lat: -16.538, lng: -68.084 }
     },
     {
-      name: 'Hawaiana',
-      description: 'La combinación perfecta de jamón, piña jugosa y queso mozzarella.',
-      img: 'https://via.placeholder.com/300x200.png?text=Pizza+Hawaiana'
+        id: 'ORD-003',
+        customerName: 'Carlos Quispe',
+        address: 'Plaza Murillo, La Paz',
+        status: 'completed',
+        paymentType: 'transferencia',
+        price: 99.99,
+        coordinates: { lat: -16.495, lng: -68.133 }
     },
     {
-      name: 'Vegetariana',
-      description: 'Pimientos, cebolla, champiñones, aceitunas y mozzarella sobre salsa de tomate.',
-      img: 'https://via.placeholder.com/300x200.png?text=Pizza+Vegetariana'
+        id: 'ORD-004',
+        customerName: 'Ana Choque',
+        address: 'Cerca al Estadio Hernando Siles',
+        status: 'pending',
+        paymentType: 'efectivo',
+        price: 65.00,
+        coordinates: { lat: -16.500, lng: -68.120 }
     },
     {
-      name: 'BBQ Chicken',
-      description: 'Pollo a la parrilla, cebolla roja, cilantro y salsa BBQ con queso mozzarella.',
-      img: 'https://via.placeholder.com/300x200.png?text=Pizza+BBQ'
-    },
-    {
-      name: 'Cuatro Quesos',
-      description: 'Una deliciosa mezcla de mozzarella, provolone, parmesano y queso azul.',
-      img: 'https://via.placeholder.com/300x200.png?text=Pizza+4+Quesos'
+        id: 'ORD-005',
+        customerName: 'Pedro Infante',
+        address: 'Zona de Obrajes',
+        status: 'completed',
+        paymentType: 'qr',
+        price: 150.25,
+        coordinates: { lat: -16.525, lng: -68.100 }
     }
-  ],
-  promotions: [
-    {
-      title: 'Martes 2x1',
-      description: 'Compra una pizza grande y llévate la segunda (de igual o menor valor) completamente gratis.'
-    },
-    {
-      title: 'Combo Familiar',
-      description: '2 Pizzas Grandes + 1 Refresco de 2L + Pan de Ajo por un precio especial.'
-    }
-  ]
-};
+];
