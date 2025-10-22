@@ -440,7 +440,8 @@ ALTER TABLE `usuarios`
 INSERT INTO `roles` (`id_rol`, `nombre`, `descripcion`) VALUES
 (1, 'Cliente', 'Usuario que realiza pedidos'),
 (2, 'Admin', 'Administrador del sistema'),
-(3, 'Repartidor', 'Personal de entrega');
+(3, 'Repartidor', 'Personal de entrega'),
+(4, 'Vendedor', 'Personal de ventas');
 
 -- Sucursal de ejemplo
 INSERT INTO `sucursales` (`id_sucursal`, `nombre`, `direccion`, `telefono`, `horario_apertura`, `horario_cierre`, `activa`) VALUES

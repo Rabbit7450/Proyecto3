@@ -1,16 +1,15 @@
 <?php
 // api/orders.php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require_once '../database/connect.php';
 
 header('Content-Type: application/json');
 
 // --- Mapa de Coordenadas de Sucursales ---
-// Ya que la tabla 'sucursales' no tiene coordenadas, las definimos aquí.
-// La clave es el id_sucursal.
 $branch_coordinates = [
-    1 => ['lat' => -16.507, 'lng' => -68.127] // Asumiendo que ID 1 es "Pizza Steve Central" / Sopocachi
-    // Añadir más sucursales aquí si es necesario
+    1 => ['lat' => -16.507, 'lng' => -68.127] 
 ];
 
 
@@ -38,11 +37,9 @@ $sql = "
         sucursales AS s ON p.sucursal_id = s.id_sucursal;
 ";
 
-$stmt = $conn->prepare($sql);
+$result = $conn->query($sql);
 
-if ($stmt && $stmt->execute()) {
-    $result = $stmt->get_result();
-    
+if ($result) {
     $orders = [];
     while($row = $result->fetch_assoc()) {
         $sucursal_id = $row['sucursal_id'];
@@ -68,12 +65,10 @@ if ($stmt && $stmt->execute()) {
         ];
     }
     $response = $orders;
-    
-    $stmt->close();
 
 } else {
     http_response_code(500);
-    $response = ['error' => 'Ocurrió un error al procesar su solicitud.'];
+    $response = ['error' => 'Ocurrió un error al procesar su solicitud: ' . $conn->error];
 }
 
 $conn->close();

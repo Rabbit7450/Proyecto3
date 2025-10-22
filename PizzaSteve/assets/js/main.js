@@ -31,18 +31,48 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
-  // Funcionalidad del formulario de login (simplificada)
+  // Funcionalidad del formulario de login
   const loginForm = document.getElementById('loginForm');
   if (loginForm) {
     loginForm.addEventListener('submit', function(e) {
       e.preventDefault();
       const username = document.getElementById('username').value;
-      if (username) {
-        alert(`¡Bienvenido, ${username}!`);
-        showPage('home');
-      } else {
-        alert('Por favor, ingrese un usuario.');
-      }
+      const password = document.getElementById('password').value;
+
+      fetch('api/login.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          switch (data.role) {
+            case 'admin':
+              window.location.href = 'views/admin/index.html';
+              break;
+            case 'vendedor':
+              window.location.href = 'views/vendedor/index.html';
+              break;
+            case 'usuario':
+              window.location.href = 'views/usuario/index.html';
+              break;
+            case 'delivery':
+              window.location.href = 'views/delivery/index.html';
+              break;
+            default:
+              showPage('home');
+          }
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Ocurrió un error al intentar iniciar sesión.');
+      });
     });
   }
 
