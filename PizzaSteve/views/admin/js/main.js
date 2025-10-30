@@ -1,6 +1,22 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const navLinks = document.querySelectorAll('.sidebar .nav-link');
+    function initTooltips(root = document) {
+        const tooltipTriggerList = [].slice.call(root.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            // Dispose existing to avoid duplicates
+            const existing = bootstrap.Tooltip.getInstance(tooltipTriggerEl);
+            if (existing) existing.dispose();
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+    }
+    // Initialize tooltips on load
+    initTooltips(document);
+    const navLinks = document.querySelectorAll('#adminSidebar .nav-link, .sidebar .nav-link');
     const sections = document.querySelectorAll('.content > div');
+    // Set initial active state
+    if (navLinks.length) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        navLinks[0].classList.add('active');
+    }
 
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
@@ -14,6 +30,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     section.classList.add('d-none');
                 }
             });
+
+            // set active state for nav icons
+            navLinks.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
 
             if (targetId === 'products') {
                 loadProducts();
@@ -45,10 +65,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         <tr>
                             <td>${product.nombre}</td>
                             <td>${product.descripcion}</td>
-                            <td>${product.precio}</td>
+                            <td>Bs. ${Number(product.precio).toFixed(2)}</td>
                             <td>
-                                <button class="btn btn-sm btn-primary edit-product" data-id="${product.id_producto}">Editar</button>
-                                <button class="btn btn-sm btn-danger delete-product" data-id="${product.id_producto}">Eliminar</button>
+                                <button class="btn btn-sm btn-outline-primary edit-product" data-id="${product.id_producto}" data-bs-toggle="tooltip" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                    <span class="visually-hidden">Editar</span>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger delete-product" data-id="${product.id_producto}" data-bs-toggle="tooltip" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                    <span class="visually-hidden">Eliminar</span>
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -67,7 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 });
             })
-            .catch(error => console.error('Error al cargar productos:', error));
+            .then(() => initTooltips(document))
+            .catch(error => {
+                console.error('Error al cargar productos:', error);
+                alert('No se pudieron cargar los productos. Ver consola para más detalles.');
+            });
     }
 
     const addProductForm = document.getElementById('addProductForm');
@@ -175,8 +205,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             <td>${user.email}</td>
                             <td>${user.role}</td>
                             <td>
-                                <button class="btn btn-sm btn-primary edit-user" data-id="${user.id_usuario}">Editar</button>
-                                <button class="btn btn-sm btn-danger delete-user" data-id="${user.id_usuario}">Eliminar</button>
+                                <button class="btn btn-sm btn-outline-primary edit-user" data-id="${user.id_usuario}" data-bs-toggle="tooltip" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                    <span class="visually-hidden">Editar</span>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger delete-user" data-id="${user.id_usuario}" data-bs-toggle="tooltip" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                    <span class="visually-hidden">Eliminar</span>
+                                </button>
                             </td>
                         </tr>
                     `;
@@ -195,7 +231,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                 });
             })
-            .catch(error => console.error('Error al cargar usuarios:', error));
+            .then(() => initTooltips(document))
+            .catch(error => {
+                console.error('Error al cargar usuarios:', error);
+                alert('No se pudieron cargar los usuarios. Ver consola para más detalles.');
+            });
     }
 
     const addUserForm = document.getElementById('addUserForm');
@@ -302,16 +342,23 @@ document.addEventListener('DOMContentLoaded', function() {
                         <tr>
                             <td>${order.id}</td>
                             <td>${order.customerName}</td>
-                            <td>${order.price}</td>
+                            <td>Bs. ${Number(order.price).toFixed(2)}</td>
                             <td>${order.status}</td>
                             <td>
-                                <button class="btn btn-sm btn-primary">Ver Detalles</button>
+                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="tooltip" title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                    <span class="visually-hidden">Ver Detalles</span>
+                                </button>
                             </td>
                         </tr>
                     `;
                     ordersTableBody.innerHTML += row;
                 });
             })
-            .catch(error => console.error('Error al cargar pedidos:', error));
+            .then(() => initTooltips(document))
+            .catch(error => {
+                console.error('Error al cargar pedidos:', error);
+                alert('No se pudieron cargar los pedidos. Ver consola para más detalles.');
+            });
     }
 });

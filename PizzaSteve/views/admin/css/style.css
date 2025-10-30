@@ -1,1 +1,61 @@
 /* Admin-specific styles */
+/* Sidebar width on md+ when offcanvas is static */
+.offcanvas-md {
+    width: 260px;
+}
+
+@media (min-width: 768px) {
+    .offcanvas-md {
+        visibility: visible !important;
+        transform: none !important;
+    }
+}
+
+.sidebar .nav-link, .offcanvas-body .nav-link {
+    color: #fff;
+}
+
+.offcanvas-body .nav-link i {
+    color: var(--primary-color, #ff6b35);
+    transition: color .2s ease, transform .2s ease;
+}
+
+.offcanvas-body .nav-link:hover i,
+.offcanvas-body .nav-link.active i {
+    color: var(--primary-color, #ff6b35);
+}
+
+.offcanvas-body .nav-link:hover {
+    background: rgba(255,255,255,0.08);
+}
+
+.navbar.bg-dark {
+    background-color: var(--dark-color, #333) !important;
+}
+
+.content h1 i {
+    color: var(--primary-color, #ff6b35);
+}
+
+.card .card-title {
+    color: var(--primary-color, #ff6b35);
+}
+
+.btn-primary {
+    background-color: var(--primary-color, #ff6b35);
+    border-color: var(--primary-color, #ff6b35);
+}
+
+.btn-primary:hover {
+    background-color: #e65c2e;
+    border-color: #e65c2e;
+}
+
+/* Table tweaks for dark headers and brand accents */
+.table thead th {
+    border-bottom: 2px solid rgba(0,0,0,0.05);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(0,0,0,0.02);
+}
