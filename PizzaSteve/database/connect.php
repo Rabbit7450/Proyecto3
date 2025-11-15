@@ -1,19 +1,10 @@
 <?php
 // database/connect.php
+// Este archivo ahora usa la configuración centralizada
+// Para mantener compatibilidad, redirigimos a config/database.php
 
-$servername = "localhost";
-$username = "root"; // Usuario por defecto de XAMPP
-$password = ""; // Contraseña por defecto de XAMPP
-$dbname = "pizzasteve_db";
+require_once __DIR__ . '/../config/database.php';
 
-// Crear conexión
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Verificar conexión
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Establecer el charset a utf8mb4 para soportar caracteres especiales
-$conn->set_charset("utf8mb4");
+// La conexión ya está creada en config/database.php y disponible en $GLOBALS['conn']
+$conn = $GLOBALS['conn'];
 ?>

@@ -1,21 +1,381 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Mi Cuenta - PizzaSteve</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/palette.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../../assets/css/loading.css">
 </head>
 <body>
-    <h1>User Profile</h1>
-    <!--
-        Instructions:
-        - Implement a user profile view.
-        - Should display user's information (name, address, etc.).
-        - Should show order history.
-        - Should allow users to update their profile information.
-        - Should have a section for managing payment methods.
-    -->
+    <!-- Loading Overlay -->
+    <div id="pageLoading" class="loading-overlay">
+        <div class="loading-container">
+            <!-- GIF de Pizza Steve -->
+            <img src="../../assets/images/crazy-person-pizza-steve.gif" class="loading-gif" alt="Cargando..." onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="loading-spinner" style="display:none;"></div>
+            <div class="loading-text">Cargando tu cuenta...</div>
+            <div class="loading-subtext">Obteniendo información</div>
+        </div>
+    </div>
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" style="background: linear-gradient(135deg, var(--brand-red) 0%, var(--primary-dark) 100%); box-shadow: var(--shadow-primary);">
+        <div class="container">
+            <a class="navbar-brand" href="../../index.html">
+                <i class="bi bi-pie-chart-fill"></i> PizzaSteve
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../index.html#menu">Menú</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../index.html#promotions">Promociones</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../../index.html#about">Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="logoutBtn">
+                            <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#cartModal">
+                            <i class="bi bi-cart"></i>
+                            <span class="badge bg-danger" id="cartCount">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenedor Principal -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <img src="https://via.placeholder.com/100" alt="Avatar" class="rounded-circle mb-2" id="userAvatar">
+                            <h5 id="userName">Cargando...</h5>
+                            <p class="text-muted" id="userEmail">Cargando...</p>
+                        </div>
+                        <div class="list-group">
+                            <button class="list-group-item list-group-item-action active" data-section="profile">
+                                <i class="bi bi-person"></i> Mi Perfil
+                            </button>
+                            <button class="list-group-item list-group-item-action" data-section="orders">
+                                <i class="bi bi-list-ul"></i> Mis Pedidos
+                            </button>
+                            <button class="list-group-item list-group-item-action" data-section="addresses">
+                                <i class="bi bi-geo-alt"></i> Direcciones
+                            </button>
+                            <button class="list-group-item list-group-item-action" data-section="payment">
+                                <i class="bi bi-credit-card"></i> Métodos de Pago
+                            </button>
+                            <button class="list-group-item list-group-item-action" data-section="favorites">
+                                <i class="bi bi-heart"></i> Favoritos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenido Principal -->
+            <div class="col-md-9">
+                <!-- Sección Perfil -->
+                <div id="profileSection" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="bi bi-person"></i> Mi Perfil</h4>
+                        </div>
+                        <div class="card-body">
+                            <form id="profileForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="profileName" class="form-label">Nombre Completo</label>
+                                        <input type="text" class="form-control" id="profileName" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+" minlength="2" autocomplete="name">
+                                        <div class="invalid-feedback">El nombre solo puede contener letras, espacios y acentos. Mínimo 2 caracteres.</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="profileEmail" class="form-label">Correo Electrónico</label>
+                                        <input type="email" class="form-control" id="profileEmail" required autocomplete="email">
+                                        <div class="invalid-feedback">Por favor ingrese un email válido.</div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="profilePhone" class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control" id="profilePhone" required pattern="[\d\s\-\+\(\)]+" minlength="7" maxlength="15" autocomplete="tel">
+                                        <div class="invalid-feedback">El teléfono debe tener entre 7 y 15 dígitos.</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="profileBirthdate" class="form-label">Fecha de Nacimiento</label>
+                                        <input type="date" class="form-control" id="profileBirthdate">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="profileAddress" class="form-label">Dirección Principal</label>
+                                    <textarea class="form-control" id="profileAddress" rows="2" minlength="5"></textarea>
+                                    <div class="invalid-feedback">La dirección debe tener al menos 5 caracteres.</div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-save"></i> Guardar Cambios
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Pedidos -->
+                <div id="ordersSection" class="content-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4><i class="bi bi-list-ul"></i> Mis Pedidos</h4>
+                            <button class="btn btn-outline-primary btn-sm" onclick="window.location.href='../../index.html#menu'">
+                                <i class="bi bi-plus"></i> Nuevo Pedido
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="ordersList">
+                                <div class="text-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Direcciones -->
+                <div id="addressesSection" class="content-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4><i class="bi bi-geo-alt"></i> Mis Direcciones</h4>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                <i class="bi bi-plus"></i> Agregar Dirección
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="addressesList">
+                                <div class="text-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Métodos de Pago -->
+                <div id="paymentSection" class="content-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h4><i class="bi bi-credit-card"></i> Métodos de Pago</h4>
+                            <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addPaymentModal">
+                                <i class="bi bi-plus"></i> Agregar Método
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="paymentMethodsList">
+                                <div class="text-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección Favoritos -->
+                <div id="favoritesSection" class="content-section" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4><i class="bi bi-heart"></i> Productos Favoritos</h4>
+                        </div>
+                        <div class="card-body">
+                            <div id="favoritesList">
+                                <div class="text-center">
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Dirección -->
+    <div class="modal fade" id="addAddressModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Nueva Dirección</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addAddressForm">
+                        <div class="mb-3">
+                            <label for="addressAlias" class="form-label">Alias (Ej: Casa, Trabajo)</label>
+                            <input type="text" class="form-control" id="addressAlias" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s'-]+" minlength="2" maxlength="50">
+                            <div class="invalid-feedback">El alias debe tener entre 2 y 50 caracteres.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addressStreet" class="form-label">Calle y Número</label>
+                            <input type="text" class="form-control" id="addressStreet" required minlength="5">
+                            <div class="invalid-feedback">La calle y número deben tener al menos 5 caracteres.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addressColonia" class="form-label">Colonia</label>
+                            <input type="text" class="form-control" id="addressColonia" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ0-9\s'-]+" minlength="2">
+                            <div class="invalid-feedback">La colonia debe tener al menos 2 caracteres.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addressCP" class="form-label">Código Postal</label>
+                            <input type="text" class="form-control" id="addressCP" required pattern="[0-9]+" minlength="4" maxlength="10">
+                            <div class="invalid-feedback">El código postal debe contener solo números (4-10 dígitos).</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addressReferencias" class="form-label">Referencias (Opcional)</label>
+                            <textarea class="form-control" id="addressReferencias" rows="2" maxlength="200"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="addAddress()">Guardar Dirección</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Agregar Método de Pago -->
+    <div class="modal fade" id="addPaymentModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Agregar Método de Pago</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addPaymentForm">
+                        <div class="mb-3">
+                            <label for="paymentType" class="form-label">Tipo de Pago</label>
+                            <select class="form-select" id="paymentType" required>
+                                <option value="">Selecciona...</option>
+                                <option value="efectivo">Efectivo</option>
+                                <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                                <option value="paypal">PayPal</option>
+                            </select>
+                        </div>
+                        <div id="cardFields" style="display: none;">
+                            <div class="mb-3">
+                                <label for="cardNumber" class="form-label">Número de Tarjeta</label>
+                                <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="cardExpiry" class="form-label">Fecha de Expiración</label>
+                                    <input type="text" class="form-control" id="cardExpiry" placeholder="MM/YY">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cardCVV" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cardCVV" placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="paymentAlias" class="form-label">Alias (Ej: Mi Tarjeta Visa)</label>
+                            <input type="text" class="form-control" id="paymentAlias">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="addPaymentMethod()">Guardar Método</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Carrito de Compras -->
+    <div class="modal fade" id="cartModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Carrito de Compras</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="cartItems"></div>
+                    <div class="text-end mt-3">
+                        <h5>Total: <span id="cartTotal">$0.00</span></h5>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="checkout()">Pagar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white mt-5">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>PizzaSteve</h5>
+                    <p>Las mejores pizzas de la ciudad</p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Contacto</h6>
+                    <p>Tel: (555) 123-4567<br>
+                    Email: info@pizzasteve.com</p>
+                </div>
+                <div class="col-md-4">
+                    <h6>Horarios</h6>
+                    <p>Lun-Vie: 11:00 - 23:00<br>
+                    Sáb-Dom: 10:00 - 24:00</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/js/notifications.js"></script>
+    <!-- Gestor centralizado de tema (debe cargarse antes de main.js) -->
+    <script src="../../assets/js/theme-manager.js"></script>
+    <script src="../../assets/js/loading.js"></script>
     <script src="js/main.js"></script>
+    <script src="../../assets/js/cart.js"></script>
+    <script>
+        // Ocultar loading cuando la página esté lista
+        window.addEventListener('load', () => {
+            const pageLoading = document.getElementById('pageLoading');
+            if (pageLoading) {
+                setTimeout(() => {
+                    pageLoading.classList.add('hidden');
+                    setTimeout(() => pageLoading.remove(), 300);
+                }, 2000); // Aumentado a 2 segundos para que el GIF se vea más tiempo
+            }
+        });
+    </script>
 </body>
 </html>

@@ -3,250 +3,683 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel de Administrador</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <title>Admin | Pizza Steve</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../../assets/css/palette.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../../assets/css/loading.css">
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-dark d-md-none sticky-top px-3">
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#adminSidebar" aria-controls="adminSidebar" aria-label="Abrir menú">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <span class="navbar-brand ms-2">Admin</span>
-    </nav>
-    <div class="container-fluid">
-        <div class="row flex-nowrap">
-            <div id="adminSidebar" class="offcanvas-md offcanvas-start bg-dark text-white col-md-3 col-lg-2 p-3" tabindex="-1" aria-labelledby="sidebarLabel">
-                <div class="offcanvas-header d-md-none">
-                    <h2 class="offcanvas-title" id="sidebarLabel">Admin</h2>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body p-0">
-                    <h2 class="text-white d-none d-md-block px-3">Admin</h2>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link text-white px-3 py-2" data-bs-dismiss="offcanvas" href="#dashboard" data-bs-toggle="tooltip" data-bs-placement="right" title="Dashboard">
-                                <i class="bi bi-speedometer2 fs-5"></i>
-                                <span class="visually-hidden">Dashboard</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white px-3 py-2" data-bs-dismiss="offcanvas" href="#products" data-bs-toggle="tooltip" data-bs-placement="right" title="Productos">
-                                <i class="bi bi-box-seam fs-5"></i>
-                                <span class="visually-hidden">Productos</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white px-3 py-2" data-bs-dismiss="offcanvas" href="#users" data-bs-toggle="tooltip" data-bs-placement="right" title="Usuarios">
-                                <i class="bi bi-people fs-5"></i>
-                                <span class="visually-hidden">Usuarios</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white px-3 py-2" data-bs-dismiss="offcanvas" href="#orders" data-bs-toggle="tooltip" data-bs-placement="right" title="Pedidos">
-                                <i class="bi bi-receipt fs-5"></i>
-                                <span class="visually-hidden">Pedidos</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+    <!-- Loading Overlay -->
+    <div id="pageLoading" class="loading-overlay">
+        <div class="loading-container">
+            <!-- GIF de Pizza Steve -->
+            <img src="../../assets/images/crazy-person-pizza-steve.gif" class="loading-gif" alt="Cargando..." onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <div class="loading-spinner" style="display:none;"></div>
+            <div class="loading-text">Cargando panel de administración...</div>
+            <div class="loading-subtext">Inicializando sistema</div>
+        </div>
+    </div>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div id="sidebar" class="sidebar vh-100 p-3 d-flex flex-column">
+            <div class="mb-4">
+                <h4 class="text-white mb-0" style="font-family: var(--font-headings);">
+                    <i class="bi bi-pizza"></i> <span class="sidebar-text">Pizza Steve</span>
+                </h4>
+                <small class="text-white-50">Panel Administrador</small>
             </div>
-            <div class="content col-md-9 col-lg-10 p-4">
-            <div id="dashboard" aria-label="Dashboard">
-                <h1 class="d-flex align-items-center gap-2">
-                    <i class="bi bi-speedometer2"></i>
-                    <span class="visually-hidden">Dashboard</span>
-                </h1>
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <div class="card text-center p-3 mb-3">
-                            <h3>Ventas Totales</h3>
-                            <p class="fs-4">Bs. 12,345</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card text-center p-3 mb-3">
-                            <h3>Usuarios Registrados</h3>
-                            <p class="fs-4">1,234</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card text-center p-3 mb-3">
-                            <h3>Pedidos Pendientes</h3>
-                            <p class="fs-4">56</p>
-                        </div>
-                    </div>
+            <nav class="flex-grow-1">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#dashboard">
+                            <i class="bi bi-speedometer2"></i>
+                            <span class="sidebar-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#products">
+                            <i class="bi bi-box-seam"></i>
+                            <span class="sidebar-text">Productos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#stock">
+                            <i class="bi bi-archive"></i>
+                            <span class="sidebar-text">Stock</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#orders">
+                            <i class="bi bi-cart-check"></i>
+                            <span class="sidebar-text">Pedidos</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#users">
+                            <i class="bi bi-people"></i>
+                            <span class="sidebar-text">Usuarios</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#branches">
+                            <i class="bi bi-shop"></i>
+                            <span class="sidebar-text">Sucursales</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#delivery">
+                            <i class="bi bi-truck"></i>
+                            <span class="sidebar-text">Repartidores</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#promotions">
+                            <i class="bi bi-tag"></i>
+                            <span class="sidebar-text">Promociones</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <header class="d-flex justify-content-between align-items-center mb-4">
+                 <button id="sidebar-toggle" class="btn btn-primary"><i class="bi bi-list"></i></button>
+                 <h1 id="section-title" class="h2 mb-0" style="font-family: var(--font-headings);">Dashboard</h1>
+                <div>
+                    <button class="btn btn-outline-danger" onclick="logout()" title="Cerrar Sesión">
+                        <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                    </button>
                 </div>
-            </div>
-            <div id="products" class="d-none" aria-label="Gestionar Productos">
-                <h1 class="d-flex align-items-center gap-2">
-                    <i class="bi bi-box-seam"></i>
-                    <span class="visually-hidden">Gestionar Productos</span>
-                </h1>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Agregar Nuevo Producto</h5>
-                        <form id="addProductForm">
-                            <div class="mb-3">
-                                <label for="productName" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="productName" required>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard">
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="stat-label">Ventas del Día</h6>
+                                <h3 id="stat-sales-today" class="mb-0">Bs. 0.00</h3>
                             </div>
-                            <div class="mb-3">
-                                <label for="productDescription" class="form-label">Descripción</label>
-                                <textarea class="form-control" id="productDescription" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="stat-label">Pedidos Pendientes</h6>
+                                <h3 id="stat-pending-orders" class="mb-0">0</h3>
                             </div>
-                            <div class="mb-3">
-                                <label for="productPrice" class="form-label">Precio</label>
-                                <input type="number" class="form-control" id="productPrice" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="stat-label">Ingresos Totales</h6>
+                                <h3 id="stat-total-revenue" class="mb-0">Bs. 0.00</h3>
                             </div>
-                            <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" title="Agregar">
-                                <i class="bi bi-plus-circle"></i>
-                                <span class="visually-hidden">Agregar Producto</span>
-                            </button>
-                        </form>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <h6 class="stat-label">Usuarios Activos</h6>
+                                <h3 id="stat-active-users" class="mb-0">0</h3>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card mt-4">
+                <!-- Charts -->
+                <div class="row">
+                    <div class="col-md-8 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Ventas de la Última Semana</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="salesChart" height="100"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Productos Más Vendidos</h5>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="topProductsChart" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Section -->
+            <section id="products" class="d-none">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#view-products">Ver Productos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#add-product">Agregar Producto</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content">
+                        <div class="tab-pane fade show active" id="view-products">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Descripción</th>
+                                            <th>Categoría</th>
+                                            <th>Precio</th>
+                                            <th>Stock</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="productsTableBody">
+                                        <tr><td colspan="7" class="text-center">Cargando...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="add-product">
+                            <form id="addProductForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="productName" required minlength="2" 
+                                           title="El nombre solo puede contener letras, espacios y acentos. No se permiten números ni caracteres especiales.">
+                                    <div class="invalid-feedback">El nombre solo puede contener letras, espacios y acentos. No se permiten números.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Descripción</label>
+                                    <textarea class="form-control" id="productDescription" rows="3" 
+                                              maxlength="500"
+                                              title="La descripción puede contener letras, números y caracteres comunes. Máximo 500 caracteres."></textarea>
+                                    <small class="form-text text-muted">Máximo 500 caracteres. Se recomienda usar solo texto descriptivo.</small>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Categoría</label>
+                                        <select class="form-select" id="productCategory" required>
+                                            <option value="Pizza">Pizza</option>
+                                            <option value="Bebida">Bebida</option>
+                                            <option value="Postre">Postre</option>
+                                            <option value="Combo">Combo</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Precio</label>
+                                        <input type="number" step="0.01" min="0.01" class="form-control" id="productPrice" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Stock Inicial</label>
+                                        <input type="number" min="0" class="form-control" id="productStock" value="0">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Sucursal</label>
+                                    <select class="form-select" id="productBranch">
+                                        <option value="">Todas las sucursales</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Agregar Producto</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stock Section -->
+            <section id="stock" class="d-none">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Gestión de Stock</h5>
+                    </div>
                     <div class="card-body">
-                        <h5 class="card-title">Lista de Productos</h5>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="stockSearch" placeholder="Buscar producto...">
+                        </div>
                         <div class="table-responsive">
-                            <table class="table align-middle">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Nombre</th>
-                                        <th>Descripción</th>
-                                        <th>Precio</th>
+                                        <th>Producto</th>
+                                        <th>Stock Actual</th>
+                                        <th>Cantidad a Agregar</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
-                                <tbody id="productsTableBody">
-                                    <!-- Product rows will be inserted here -->
+                                <tbody id="stockTableBody">
+                                    <tr><td colspan="4" class="text-center">Cargando...</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div id="users" class="d-none" aria-label="Gestionar Usuarios">
-                <h1 class="d-flex align-items-center gap-2">
-                    <i class="bi bi-people"></i>
-                    <span class="visually-hidden">Gestionar Usuarios</span>
-                </h1>
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Agregar Nuevo Usuario</h5>
-                        <form id="addUserForm">
-                            <div class="mb-3">
-                                <label for="userName" class="form-label">Nombre de Usuario</label>
-                                <input type="text" class="form-control" id="userName" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="userPassword" class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="userPassword" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="userEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="userEmail" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="userRole" class="form-label">Rol</label>
-                                <select class="form-select" id="userRole" required>
-                                    <option value="Cliente">Usuario</option>
-                                    <option value="Vendedor">Vendedor</option>
-                                    <option value="Repartidor">Delivery</option>
-                                    <option value="Admin">Admin</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" title="Agregar">
-                                <i class="bi bi-plus-circle"></i>
-                                <span class="visually-hidden">Agregar Usuario</span>
-                            </button>
-                        </form>
-                    </div>
-                </div>
+            </section>
 
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Lista de Usuarios</h5>
-                        <div class="table-responsive">
-                            <table class="table align-middle">
-                                <thead>
-                                    <tr>
-                                        <th>Nombre de Usuario</th>
-                                        <th>Email</th>
-                                        <th>Rol</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="usersTableBody">
-                                    <!-- User rows will be inserted here -->
-                                </tbody>
-                            </table>
-                        </div>
+            <!-- Orders Section -->
+            <section id="orders" class="d-none">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Gestión de Pedidos</h5>
                     </div>
-                </div>
-            </div>
-            <div id="orders" class="d-none" aria-label="Gestionar Pedidos">
-                <h1 class="d-flex align-items-center gap-2">
-                    <i class="bi bi-receipt"></i>
-                    <span class="visually-hidden">Gestionar Pedidos</span>
-                </h1>
-                <div class="card mt-4">
                     <div class="card-body">
-                        <h5 class="card-title">Lista de Pedidos</h5>
+                        <div class="mb-3">
+                            <select class="form-select d-inline-block w-auto" id="orderStatusFilter">
+                                <option value="">Todos los estados</option>
+                                <option value="pending">Pendiente</option>
+                                <option value="preparing">En Preparación</option>
+                                <option value="ready_for_delivery">Listo para Entrega</option>
+                                <option value="out_for_delivery">En Camino</option>
+                                <option value="completed">Completado</option>
+                                <option value="cancelled">Cancelado</option>
+                            </select>
+                        </div>
                         <div class="table-responsive">
-                            <table class="table align-middle">
+                            <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>ID Pedido</th>
+                                        <th>ID</th>
                                         <th>Cliente</th>
+                                        <th>Fecha</th>
                                         <th>Total</th>
                                         <th>Estado</th>
+                                        <th>Pago</th>
+                                        <th>Repartidor</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody id="ordersTableBody">
-                                    <!-- Order rows will be inserted here -->
+                                    <tr><td colspan="8" class="text-center">Cargando...</td></tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users" class="d-none">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#view-users">Ver Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#add-user">Agregar Usuario</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content">
+                        <div class="tab-pane fade show active" id="view-users">
+                            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-3">
+                                <div>
+                                    <h5 class="mb-1">Administrar usuarios</h5>
+                                    <span class="text-muted" id="usersStatusSummary">Mostrando usuarios activos</span>
+                                </div>
+                                <div class="btn-group" role="group" id="userStatusFilters" aria-label="Filtro de usuarios">
+                                    <button type="button" class="btn btn-sm btn-outline-light active" data-filter="active">Activos</button>
+                                    <button type="button" class="btn btn-sm btn-outline-light" data-filter="inactive">Inactivos</button>
+                                    <button type="button" class="btn btn-sm btn-outline-light" data-filter="all">Todos</button>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Email</th>
+                                            <th>Teléfono</th>
+                                            <th>Rol</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTableBody">
+                                        <tr><td colspan="7" class="text-center">Cargando...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="add-user">
+                            <form id="addUserForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="userName" required minlength="2">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="userEmail" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control" id="userPhone" pattern="[\d\s\-\+\(\)]+" minlength="7" maxlength="15">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Rol</label>
+                                        <select class="form-select" id="userRole" required>
+                                            <option value="">Seleccionar rol...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Dirección</label>
+                                        <input type="text" class="form-control" id="userAddress">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Fecha de Cumpleaños</label>
+                                        <input type="date" class="form-control" id="userBirthday">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Contraseña</label>
+                                    <input type="password" class="form-control" id="userPassword" required minlength="6">
+                                </div>
+                                <button type="submit" class="btn btn-primary">Agregar Usuario</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Branches Section -->
+            <section id="branches" class="d-none">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#view-branches">Ver Sucursales</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#add-branch">Agregar Sucursal</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content">
+                        <div class="tab-pane fade show active" id="view-branches">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Dirección</th>
+                                            <th>Teléfono</th>
+                                            <th>Horario</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="branchesTableBody">
+                                        <tr><td colspan="7" class="text-center">Cargando...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="add-branch">
+                            <form id="addBranchForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="branchName" required minlength="2">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Dirección</label>
+                                    <input type="text" class="form-control" id="branchAddress" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control" id="branchPhone" pattern="[\d\s\-\+\(\)]+" minlength="7" maxlength="15">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Horario Apertura</label>
+                                        <input type="time" class="form-control" id="branchOpen">
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Horario Cierre</label>
+                                        <input type="time" class="form-control" id="branchClose">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="branchActive" checked>
+                                        <label class="form-check-label" for="branchActive">Activa</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Agregar Sucursal</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Delivery Section -->
+            <section id="delivery" class="d-none">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#view-delivery">Ver Repartidores</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#add-delivery">Agregar Repartidor</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content">
+                        <div class="tab-pane fade show active" id="view-delivery">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nombre</th>
+                                            <th>Teléfono</th>
+                                            <th>Email</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="deliveryTableBody">
+                                        <tr><td colspan="6" class="text-center">Cargando...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="add-delivery">
+                            <form id="addDeliveryForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="deliveryName" required minlength="2">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control" id="deliveryPhone" pattern="[\d\s\-\+\(\)]+" minlength="7" maxlength="15">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="deliveryEmail">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Estado</label>
+                                    <select class="form-select" id="deliveryStatus">
+                                        <option value="disponible">Disponible</option>
+                                        <option value="ocupado">Ocupado</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Agregar Repartidor</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Promotions Section -->
+            <section id="promotions" class="d-none">
+                <div class="card">
+                    <div class="card-header">
+                        <ul class="nav nav-tabs card-header-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-bs-toggle="tab" href="#view-promotions">Ver Promociones</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-bs-toggle="tab" href="#add-promotion">Agregar Promoción</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="card-body tab-content">
+                        <div class="tab-pane fade show active" id="view-promotions">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Descripción</th>
+                                            <th>Descuento</th>
+                                            <th>Fecha Inicio</th>
+                                            <th>Fecha Fin</th>
+                                            <th>Sucursal</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="promotionsTableBody">
+                                        <tr><td colspan="8" class="text-center">Cargando...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="add-promotion">
+                            <form id="addPromotionForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Descripción</label>
+                                    <input type="text" class="form-control" id="promotionDescription" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Porcentaje de Descuento</label>
+                                        <input type="number" step="0.01" min="0" max="100" class="form-control" id="promotionDiscount" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Fecha Inicio</label>
+                                        <input type="date" class="form-control" id="promotionStart" required>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">Fecha Fin</label>
+                                        <input type="date" class="form-control" id="promotionEnd" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Sucursal</label>
+                                    <select class="form-select" id="promotionBranch">
+                                        <option value="">Todas las sucursales</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="promotionActive" checked>
+                                        <label class="form-check-label" for="promotionActive">Activa</label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Agregar Promoción</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal fade" id="orderDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles del Pedido</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="orderDetailsContent">
+                    <!-- Content loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Edit Product Modal -->
-    <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editProductModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editProductModalLabel">Editar Producto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Editar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="editProductForm">
                         <input type="hidden" id="editProductId">
                         <div class="mb-3">
-                            <label for="editProductName" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="editProductName" required>
+                            <label class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="editProductName" required minlength="2" 
+                                   title="El nombre solo puede contener letras, espacios y acentos. No se permiten números ni caracteres especiales.">
+                            <div class="invalid-feedback">El nombre solo puede contener letras, espacios y acentos. No se permiten números.</div>
                         </div>
                         <div class="mb-3">
-                            <label for="editProductDescription" class="form-label">Descripción</label>
-                            <textarea class="form-control" id="editProductDescription" rows="3"></textarea>
+                            <label class="form-label">Descripción</label>
+                            <textarea class="form-control" id="editProductDescription" rows="3" maxlength="500"
+                                      title="La descripción puede contener letras, números y caracteres comunes. Máximo 500 caracteres."></textarea>
+                            <small class="form-text text-muted">Máximo 500 caracteres. Se recomienda usar solo texto descriptivo.</small>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Categoría</label>
+                                <select class="form-select" id="editProductCategory" required>
+                                    <option value="Pizza">Pizza</option>
+                                    <option value="Bebida">Bebida</option>
+                                    <option value="Postre">Postre</option>
+                                    <option value="Combo">Combo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Precio</label>
+                                <input type="number" step="0.01" min="0.01" class="form-control" id="editProductPrice" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Stock</label>
+                                <input type="number" min="0" class="form-control" id="editProductStock" required>
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="editProductPrice" class="form-label">Precio</label>
-                            <input type="number" class="form-control" id="editProductPrice" step="0.01" required>
+                            <label class="form-label">Sucursal</label>
+                            <select class="form-select" id="editProductBranch">
+                                <option value="">Todas las sucursales</option>
+                            </select>
                         </div>
-                        <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" title="Guardar">
-                            <i class="bi bi-save"></i>
-                            <span class="visually-hidden">Guardar Cambios</span>
-                        </button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </form>
                 </div>
             </div>
@@ -254,43 +687,214 @@
     </div>
 
     <!-- Edit User Modal -->
-    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editUserModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title">Editar Usuario</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <form id="editUserForm">
                         <input type="hidden" id="editUserId">
-                        <div class="mb-3">
-                            <label for="editUserName" class="form-label">Nombre de Usuario</label>
-                            <input type="text" class="form-control" id="editUserName" required>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="editUserName" required minlength="2">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editUserEmail" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control" id="editUserPhone" pattern="[\d\s\-\+\(\)]+" minlength="7" maxlength="15">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Rol</label>
+                                <select class="form-select" id="editUserRole" required>
+                                    <option value="">Seleccionar rol...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Dirección</label>
+                                <input type="text" class="form-control" id="editUserAddress">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Fecha de Cumpleaños</label>
+                                <input type="date" class="form-control" id="editUserBirthday">
+                            </div>
                         </div>
                         <div class="mb-3">
-                            <label for="editUserEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="editUserEmail" required>
+                            <label class="form-label">Nueva Contraseña (dejar vacío para no cambiar)</label>
+                                        <input type="password" class="form-control" id="editUserPassword" minlength="6">
                         </div>
-                        <div class="mb-3">
-                            <label for="editUserRole" class="form-label">Rol</label>
-                                                            <select class="form-select" id="editUserRole" required>
-                                                                <option value="Cliente">Usuario</option>
-                                                                <option value="Vendedor">Vendedor</option>
-                                                                <option value="Repartidor">Delivery</option>
-                                                                <option value="Admin">Admin</option>
-                                                            </select>                        </div>
-                        <button type="submit" class="btn btn-primary" data-bs-toggle="tooltip" title="Guardar">
-                            <i class="bi bi-save"></i>
-                            <span class="visually-hidden">Guardar Cambios</span>
-                        </button>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Edit Branch Modal -->
+    <div class="modal fade" id="editBranchModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Sucursal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editBranchForm">
+                        <input type="hidden" id="editBranchId">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="editBranchName" required minlength="2">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Dirección</label>
+                            <input type="text" class="form-control" id="editBranchAddress" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="editBranchPhone" pattern="[\d\s\-\+\(\)]+" minlength="7" maxlength="15">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Horario Apertura</label>
+                                <input type="time" class="form-control" id="editBranchOpen">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Horario Cierre</label>
+                                <input type="time" class="form-control" id="editBranchClose">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editBranchActive">
+                                <label class="form-check-label" for="editBranchActive">Activa</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Delivery Modal -->
+    <div class="modal fade" id="editDeliveryModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Repartidor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editDeliveryForm">
+                        <input type="hidden" id="editDeliveryId">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="editDeliveryName" required minlength="2">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Teléfono</label>
+                                    <input type="tel" class="form-control" id="editDeliveryPhone" pattern="[\d\s\-\+\(\)]+" minlength="7" maxlength="15">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editDeliveryEmail">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Estado</label>
+                            <select class="form-select" id="editDeliveryStatus">
+                                <option value="disponible">Disponible</option>
+                                <option value="ocupado">Ocupado</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Promotion Modal -->
+    <div class="modal fade" id="editPromotionModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Promoción</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPromotionForm">
+                        <input type="hidden" id="editPromotionId">
+                        <div class="mb-3">
+                            <label class="form-label">Descripción</label>
+                            <input type="text" class="form-control" id="editPromotionDescription" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Porcentaje de Descuento</label>
+                                    <input type="number" step="0.01" min="0" max="100" class="form-control" id="editPromotionDiscount" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Fecha Inicio</label>
+                                <input type="date" class="form-control" id="editPromotionStart" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Fecha Fin</label>
+                                <input type="date" class="form-control" id="editPromotionEnd" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Sucursal</label>
+                            <select class="form-select" id="editPromotionBranch">
+                                <option value="">Todas las sucursales</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="editPromotionActive">
+                                <label class="form-check-label" for="editPromotionActive">Activa</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../assets/js/security.js"></script>
+    <script src="../../assets/js/notifications.js"></script>
+    <!-- Gestor centralizado de tema (debe cargarse antes de main.js) -->
+    <script src="../../assets/js/theme-manager.js"></script>
+    <script src="js/form-validation.js"></script>
+    <script src="../../assets/js/loading.js"></script>
     <script src="js/main.js"></script>
+    <script>
+        // Ocultar loading cuando la página esté lista
+        window.addEventListener('load', () => {
+            const pageLoading = document.getElementById('pageLoading');
+            if (pageLoading) {
+                setTimeout(() => {
+                    pageLoading.classList.add('hidden');
+                    setTimeout(() => pageLoading.remove(), 300);
+                }, 2000); // Aumentado a 2 segundos para que el GIF se vea más tiempo
+            }
+        });
+    </script>
 </body>
 </html>

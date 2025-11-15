@@ -14,12 +14,13 @@ body {
 }
 
 header {
-    background-color: #d9534f; /* Pizza Red */
+    background: linear-gradient(135deg, #D92B2B 0%, #b82222 100%);
     color: white;
     padding: 1rem;
     text-align: center;
     border-radius: 0 0 8px 8px;
     margin-bottom: 1.5rem;
+    box-shadow: 0 4px 15px rgba(217, 43, 43, 0.3);
 }
 
 /* Dashboard Stats */
@@ -47,7 +48,7 @@ header {
 .stat-card p {
     font-size: 2rem;
     font-weight: bold;
-    color: #d9534f;
+    color: #D92B2B;
     margin: 0;
 }
 
@@ -102,20 +103,23 @@ header {
 }
 
 .accept-btn {
-    background-color: #5cb85c; /* Green */
+    background: linear-gradient(135deg, #D92B2B 0%, #b82222 100%);
     color: white;
     border: none;
     padding: 0.6rem 1rem;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 0.9rem;
     font-weight: bold;
     margin-top: 0.5rem;
-    transition: background-color 0.2s;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(217, 43, 43, 0.3);
 }
 
 .accept-btn:hover {
-    background-color: #4cae4c;
+    background: linear-gradient(135deg, #b82222 0%, #D92B2B 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(217, 43, 43, 0.4);
 }
 
 /* Map */
