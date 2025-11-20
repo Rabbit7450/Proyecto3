@@ -286,8 +286,9 @@ async function confirmOrder() {
             // Limpiar carrito
             localStorage.removeItem('cart');
             
-            // Mostrar modal de confirmación
-            showConfirmationModal(result.orderId);
+            // Redirigir a la página de recibo con QR
+            const orderId = result.orderId || (result.id_pedido ? 'ORD-' + String(result.id_pedido).padStart(3, '0') : '');
+            window.location.href = `order-receipt.html?orderId=${orderId}`;
         } else {
             notify('Checkout', 'Error al procesar el pedido: ' + result.message, 'error');
         }

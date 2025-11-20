@@ -461,8 +461,30 @@ function showDeliveryConfirmationModal(order, orderId) {
     // Reset form
     document.getElementById('deliveryNotes').value = '';
     document.getElementById('confirmDelivery').checked = false;
+    document.getElementById('deliveryPhoto').value = '';
+    document.getElementById('deliveryPhotoPreview').style.display = 'none';
+    
+    // Configurar preview de foto
+    const photoInput = document.getElementById('deliveryPhoto');
+    photoInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('deliveryPhotoPreviewImg').src = e.target.result;
+                document.getElementById('deliveryPhotoPreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+    });
     
     modal.show();
+}
+
+// Función para eliminar la foto seleccionada
+window.removeDeliveryPhoto = function() {
+    document.getElementById('deliveryPhoto').value = '';
+    document.getElementById('deliveryPhotoPreview').style.display = 'none';
 }
 
 // =================================================================
@@ -498,6 +520,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
             
+            const photoInput = document.getElementById('deliveryPhoto');
+            if (!photoInput.files || photoInput.files.length === 0) {
+                notifyDelivery('Por favor, sube una foto de la entrega. Es obligatorio.', 'warning');
+                return;
+            }
+            
             if (!currentDeliveryOrderId) {
                 notifyDelivery('Error: No se pudo identificar el pedido.', 'error');
                 return;
@@ -505,9 +533,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Deshabilitar botón mientras se procesa
             confirmBtn.disabled = true;
-            confirmBtn.textContent = 'Procesando...';
+            confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Procesando...';
             
             try {
+                // Primero subir la foto de entrega
+                const photoFile = photoInput.files[0];
+                const formData = new FormData();
+                formData.append('receipt', photoFile);
+                formData.append('orderId', currentDeliveryOrderId);
+                formData.append('tipo', 'entrega'); // Marcar como foto de entrega
+                
+                const uploadResponse = await fetch('../../api/upload_receipt.php', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData
+                });
+                
+                const uploadResult = await uploadResponse.json();
+                
+                if (!uploadResponse.ok || !uploadResult.success) {
+                    throw new Error(uploadResult.message || 'Error al subir la foto de entrega');
+                }
+                
+                // Luego actualizar el estado del pedido
                 await updateOrderStatus(currentDeliveryOrderId, 'completed');
                 
                 // Cerrar modal

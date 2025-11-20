@@ -1133,6 +1133,85 @@ document.addEventListener('DOMContentLoaded', function() {
                 productsHtml = '<p class="text-muted">No hay productos registrados para este pedido.</p>';
             }
             
+            // Separar comprobantes de pago y fotos de entrega
+            const paymentReceipts = order.receipts ? order.receipts.filter(r => !r.tipo_comprobante || r.tipo_comprobante === 'pago') : [];
+            const deliveryPhotos = order.receipts ? order.receipts.filter(r => r.tipo_comprobante === 'entrega') : [];
+            
+            // Generar HTML para comprobantes de pago
+            let receiptsHtml = '';
+            if (paymentReceipts.length > 0) {
+                receiptsHtml = '<div class="row mt-3">';
+                paymentReceipts.forEach((receipt, index) => {
+                    const receiptUrl = `../../${receipt.ruta_archivo}`;
+                    const isImage = receipt.tipo_archivo && receipt.tipo_archivo.startsWith('image/');
+                    const fileSize = receipt.tamano_archivo ? (receipt.tamano_archivo / 1024).toFixed(2) + ' KB' : 'N/A';
+                    const uploadDate = receipt.fecha_subida ? new Date(receipt.fecha_subida).toLocaleString('es-BO') : 'N/A';
+                    
+                    receiptsHtml += `
+                        <div class="col-md-6 mb-3">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Comprobante de Pago ${index + 1}</h6>
+                                    <small class="text-muted">Subido: ${uploadDate}</small>
+                                </div>
+                                <div class="card-body text-center">
+                                    ${isImage ? `
+                                        <img src="${receiptUrl}" alt="Comprobante" class="img-fluid mb-2" style="max-height: 300px; cursor: pointer;" 
+                                             onclick="window.open('${receiptUrl}', '_blank')">
+                                    ` : `
+                                        <div class="p-4">
+                                            <i class="bi bi-file-earmark-pdf" style="font-size: 3rem; color: #dc3545;"></i>
+                                            <p class="mt-2">Archivo PDF</p>
+                                            <a href="${receiptUrl}" target="_blank" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-download"></i> Ver/Descargar
+                                            </a>
+                                        </div>
+                                    `}
+                                    <div class="mt-2">
+                                        <small class="text-muted">Tamaño: ${fileSize}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                receiptsHtml += '</div>';
+            } else {
+                receiptsHtml = '<p class="text-muted mt-3">No hay comprobantes de pago subidos para este pedido.</p>';
+            }
+            
+            // Generar HTML para fotos de entrega
+            let deliveryPhotosHtml = '';
+            if (deliveryPhotos.length > 0) {
+                deliveryPhotosHtml = '<div class="row mt-3">';
+                deliveryPhotos.forEach((photo, index) => {
+                    const photoUrl = `../../${photo.ruta_archivo}`;
+                    const fileSize = photo.tamano_archivo ? (photo.tamano_archivo / 1024).toFixed(2) + ' KB' : 'N/A';
+                    const uploadDate = photo.fecha_subida ? new Date(photo.fecha_subida).toLocaleString('es-BO') : 'N/A';
+                    
+                    deliveryPhotosHtml += `
+                        <div class="col-md-6 mb-3">
+                            <div class="card border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="bi bi-camera"></i> Foto de Entrega ${index + 1}</h6>
+                                    <small>Subida: ${uploadDate}</small>
+                                </div>
+                                <div class="card-body text-center">
+                                    <img src="${photoUrl}" alt="Foto de entrega" class="img-fluid mb-2" style="max-height: 300px; cursor: pointer;" 
+                                         onclick="window.open('${photoUrl}', '_blank')">
+                                    <div class="mt-2">
+                                        <small class="text-muted">Tamaño: ${fileSize}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                deliveryPhotosHtml += '</div>';
+            } else {
+                deliveryPhotosHtml = '<p class="text-muted mt-3">No hay fotos de entrega registradas para este pedido.</p>';
+            }
+            
             modalContent.innerHTML = `
                 <div class="row">
                     <div class="col-md-6">
@@ -1156,6 +1235,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="mt-3">
                     <h6>Productos</h6>
                     ${productsHtml || '<p>No hay productos en este pedido</p>'}
+                </div>
+                <div class="mt-3">
+                    <h6><i class="bi bi-receipt"></i> Comprobantes de Pago</h6>
+                    ${receiptsHtml}
+                </div>
+                <div class="mt-3">
+                    <h6><i class="bi bi-camera"></i> Fotos de Entrega</h6>
+                    ${deliveryPhotosHtml}
                 </div>
                 ${order.status === 'completed' ? `
                 <div class="alert alert-info mt-3">

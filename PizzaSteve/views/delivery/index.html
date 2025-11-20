@@ -133,6 +133,19 @@
                         <!-- Información del pedido se cargará aquí -->
                     </div>
                     <div class="mb-3">
+                        <label for="deliveryPhoto" class="form-label">
+                            <i class="bi bi-camera"></i> Foto de Entrega <span class="text-danger">*</span>
+                        </label>
+                        <input type="file" class="form-control" id="deliveryPhoto" accept="image/*" required>
+                        <small class="form-text text-muted">Debes subir una foto que verifique la entrega del pedido</small>
+                        <div id="deliveryPhotoPreview" class="mt-2" style="display: none;">
+                            <img id="deliveryPhotoPreviewImg" src="" alt="Vista previa" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
+                            <button type="button" class="btn btn-sm btn-danger ms-2" onclick="removeDeliveryPhoto()">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
                         <label for="deliveryNotes" class="form-label">Notas de entrega (opcional):</label>
                         <textarea class="form-control" id="deliveryNotes" rows="3" placeholder="Ej: Entregado en la puerta principal, recibido por el cliente..."></textarea>
                     </div>

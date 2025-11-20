@@ -118,6 +118,39 @@ switch ($method) {
                     $order['products'] = [];
                 }
 
+                // Obtener comprobantes del pedido
+                // Usar COALESCE para manejar el caso donde la columna tipo_comprobante no existe
+                $sql_receipts = "
+                    SELECT 
+                        id_comprobante,
+                        ruta_archivo,
+                        fecha_subida,
+                        tipo_archivo,
+                        tamano_archivo,
+                        COALESCE(tipo_comprobante, 'pago') AS tipo_comprobante
+                    FROM comprobantes_pago
+                    WHERE id_pedido = ?
+                    ORDER BY fecha_subida DESC
+                ";
+                $stmt_receipts = $conn->prepare($sql_receipts);
+                if ($stmt_receipts) {
+                    $stmt_receipts->bind_param('i', $pedido_id);
+                    $stmt_receipts->execute();
+                    $result_receipts = $stmt_receipts->get_result();
+                    $receipts = [];
+                    while ($row = $result_receipts->fetch_assoc()) {
+                        // Si tipo_comprobante no existe en la BD, asignar 'pago' por defecto
+                        if (!isset($row['tipo_comprobante']) || empty($row['tipo_comprobante'])) {
+                            $row['tipo_comprobante'] = 'pago';
+                        }
+                        $receipts[] = $row;
+                    }
+                    $stmt_receipts->close();
+                    $order['receipts'] = $receipts;
+                } else {
+                    $order['receipts'] = [];
+                }
+
                 $order['id'] = 'ORD-' . str_pad($order['id_pedido'], 3, '0', STR_PAD_LEFT);
                 echo json_encode($order);
             } else {
